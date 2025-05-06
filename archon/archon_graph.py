@@ -29,11 +29,8 @@ from archon.refiner_agents.agent_refiner_agent import agent_refiner_agent, Agent
 from archon.agent_tools import list_documentation_pages_tool
 from utils.utils import get_env_var, get_clients
 
-# Import OpenCog dependencies
-import opencog
-import opencog.atomspace
-import opencog.cogserver
-import opencog.utilities
+# Import custom OpenCog dependencies
+from utils.opencog import opencog
 
 # Load environment variables
 load_dotenv()
@@ -101,7 +98,47 @@ async def define_scope_with_reasoner(state: AgentState):
     documentation_pages = await list_documentation_pages_tool(supabase)
     documentation_pages_str = "\n".join(documentation_pages)
 
-    # Then, use the reasoner to define the scope
+    # Create knowledge representation for the user request in AtomSpace
+    # This enables complex reasoning patterns via Atomese
+    request_node = atomspace.add_node("ConceptNode", "UserRequest")
+    request_content_node = atomspace.add_node("ConceptNode", state['latest_user_message'])
+    utilities.create_atomese_expression(f"(Evaluation (Predicate \"has_content\") (List {request_node} {request_content_node}))")
+    
+    # Add documentation pages to AtomSpace for reasoning
+    doc_list_node = atomspace.add_node("ConceptNode", "DocumentationPages")
+    for doc_page in documentation_pages:
+        page_node = atomspace.add_node("ConceptNode", doc_page)
+        utilities.create_atomese_expression(f"(Member {page_node} {doc_list_node})")
+
+    # Register a simple reasoner to identify relevant documentation based on content similarity
+    def doc_relevance_reasoner(atomspace, request_text):
+        """Simple reasoner to identify relevant documentation pages"""
+        relevant_docs = []
+        request_words = set(request_text.lower().split())
+        
+        # Get all documentation pages from AtomSpace
+        doc_list = atomspace.get_atom(doc_list_node)
+        if not doc_list:
+            return []
+            
+        # Find relevant docs based on simple word overlap
+        for doc_handle in utilities.query_atoms(type_filter="ConceptNode"):
+            doc = atomspace.get_atom(doc_handle)
+            if doc and "name" in doc:
+                doc_name = doc["name"]
+                # Simple relevance check - could be enhanced with more sophisticated NLP
+                if any(word in doc_name.lower() for word in request_words):
+                    relevant_docs.append(doc_name)
+                    
+        return relevant_docs
+    
+    # Register the reasoner
+    utilities.register_reasoner("doc_relevance", doc_relevance_reasoner)
+    
+    # Apply the reasoner to find relevant documentation
+    relevant_docs = utilities.apply_reasoner("doc_relevance", state['latest_user_message'])
+    
+    # Then, use the reasoner to define the scope, enhanced with OpenCog reasoning
     prompt = f"""
     User AI Agent Request: {state['latest_user_message']}
     
@@ -114,12 +151,21 @@ async def define_scope_with_reasoner(state: AgentState):
     Also based on these documentation pages available:
 
     {documentation_pages_str}
+    
+    Based on advanced reasoning, these documentation pages are particularly relevant:
+    {', '.join(relevant_docs) if relevant_docs else 'No specific pages identified as highly relevant'}
 
     Include a list of documentation pages that are relevant to creating this agent for the user in the scope document.
     """
 
     result = await reasoner.run(prompt)
     scope = result.data
+
+    # Store the agent requirements in AtomSpace for future reasoning
+    scope_node = atomspace.add_node("ConceptNode", "AgentScope")
+    scope_content_node = atomspace.add_node("ConceptNode", scope)
+    utilities.create_atomese_expression(f"(Evaluation (Predicate \"has_content\") (List {scope_node} {scope_content_node}))")
+    utilities.create_atomese_expression(f"(Inheritance {scope_node} {request_node})")
 
     # Get the directory one level up from the current file
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -151,12 +197,116 @@ async def advisor_with_examples(state: AgentState):
             # Use the full path instead of relative path
             file_list.append(file_path)
     
-    # Then, prompt the advisor with the list of files it can use for examples and tools
-    deps = AdvisorDeps(file_list=file_list)
+    # Access the OpenCog components from the state if they exist,
+    # otherwise create new instances
+    atomspace = state.get('atomspace')
+    cogserver = state.get('cogserver')
+    utilities = state.get('utilities')
+    
+    if not atomspace or not cogserver or not utilities:
+        # Create new OpenCog components if they don't exist
+        atomspace = opencog.atomspace.AtomSpace()
+        cogserver = opencog.cogserver.CogServer(atomspace)
+        utilities = opencog.utilities.Utilities(atomspace)
+    
+    # Leverage AtomSpace for organizing and reasoning about example files
+    # Create a node representing the example files category
+    examples_node = atomspace.add_node("ConceptNode", "ExampleFiles")
+    tools_node = atomspace.add_node("ConceptNode", "ToolFiles")
+    mcp_node = atomspace.add_node("ConceptNode", "MCPFiles")
+    
+    # Add file entries to AtomSpace with appropriate categorization
+    for file_path in file_list:
+        file_node = atomspace.add_node("ConceptNode", file_path)
+        
+        # Categorize files based on path
+        if "/examples/" in file_path:
+            utilities.create_atomese_expression(f"(Member {file_node} {examples_node})")
+        elif "/tools/" in file_path:
+            utilities.create_atomese_expression(f"(Member {file_node} {tools_node})")
+        elif "/mcps/" in file_path:
+            utilities.create_atomese_expression(f"(Member {file_node} {mcp_node})")
+    
+    # Add user request to AtomSpace
+    request_node = atomspace.add_node("ConceptNode", "UserRequest")
+    request_content_node = atomspace.add_node("ConceptNode", state['latest_user_message'])
+    utilities.create_atomese_expression(f"(Evaluation (Predicate \"has_content\") (List {request_node} {request_content_node}))")
+    
+    # Define a simple file relevance reasoner based on keyword matching
+    def file_relevance_reasoner(atomspace, request_text, utilities):
+        """Reasoner to identify relevant example files for a user request"""
+        request_keywords = set(request_text.lower().split())
+        relevance_scores = {}
+        
+        # Get all file nodes from AtomSpace
+        for file_handle in utilities.query_atoms(type_filter="ConceptNode"):
+            file_data = atomspace.get_atom(file_handle)
+            if not file_data or "name" not in file_data:
+                continue
+                
+            file_path = file_data["name"]
+            if not isinstance(file_path, str) or not os.path.exists(file_path):
+                continue
+                
+            # Calculate relevance based on path components and filename
+            score = 0
+            path_parts = file_path.lower().split('/')
+            
+            # Check filename relevance
+            filename = path_parts[-1]
+            for keyword in request_keywords:
+                if keyword in filename:
+                    score += 10
+            
+            # Check path relevance
+            for part in path_parts:
+                for keyword in request_keywords:
+                    if keyword in part:
+                        score += 5
+            
+            # Assign higher scores to examples that match request type
+            if any(kw in request_text.lower() for kw in ["web", "search", "browser"]):
+                if "web_search" in file_path.lower() or "brave_search" in file_path.lower():
+                    score += 15
+            
+            if any(kw in request_text.lower() for kw in ["github", "git", "repo", "repository"]):
+                if "github" in file_path.lower() or "git" in file_path.lower():
+                    score += 15
+                    
+            if any(kw in request_text.lower() for kw in ["mcp", "model", "context", "protocol"]):
+                if "/mcps/" in file_path:
+                    score += 15
+            
+            # If the score is positive, consider it relevant
+            if score > 0:
+                relevance_scores[file_path] = score
+                
+        # Sort by relevance score
+        sorted_files = sorted(relevance_scores.items(), key=lambda x: x[1], reverse=True)
+        return [file_path for file_path, score in sorted_files]
+    
+    # Register the reasoner
+    utilities.register_reasoner("file_relevance", file_relevance_reasoner)
+    
+    # Apply the reasoner to find relevant example files
+    relevant_files = utilities.apply_reasoner("file_relevance", state['latest_user_message'], utilities)
+    
+    # Update the file list to prioritize relevant files
+    # Put the most relevant files first in the list, followed by the rest
+    file_list = relevant_files + [f for f in file_list if f not in relevant_files]
+    
+    # Then, prompt the advisor with the enhanced list of files it can use for examples and tools
+    deps = AdvisorDeps(
+        file_list=file_list,
+        atomspace=atomspace,
+        cogserver=cogserver,
+        utilities=utilities
+    )
+    
     result = await advisor_agent.run(state['latest_user_message'], deps=deps)
     advisor_output = result.data
     
-    return {"file_list": file_list, "advisor_output": advisor_output}
+    return {"file_list": file_list, "advisor_output": advisor_output, "atomspace": atomspace, "cogserver": cogserver, "utilities": utilities}
 
 # Coding Node with Feedback Handling
 async def coder_agent(state: AgentState, writer):    

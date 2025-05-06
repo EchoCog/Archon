@@ -24,7 +24,7 @@ deprecation==2.1.0
 distro==1.9.0
 dnspython==2.7.0
 email_validator==2.2.0
-eval_type_backport==0.2.2
+eval_type_backport==0.2.0
 executing==2.1.0
 fake-http-header==0.3.5
 fastapi==0.115.8
@@ -86,6 +86,10 @@ mypy-extensions==1.0.0
 narwhals==1.21.1
 nltk==3.9.1
 numpy==2.2.1
+opencog==1.0.0
+opencog.atomspace==1.0.0
+opencog.cogserver==1.0.0
+opencog.utilities==1.0.0
 openai==1.59.6
 opentelemetry-api==1.29.0
 opentelemetry-exporter-otlp-proto-common==1.29.0
