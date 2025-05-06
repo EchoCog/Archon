@@ -6,12 +6,12 @@
 
 <h3>🚀 **CURRENT VERSION** 🚀</h3>
 
-**[ V6 - Tool Library and MCP Integration ]**
-*Prebuilt tools, examples, and MCP server integration*
+**[ V7 - OpenCog Integration ]**
+*Enhanced reasoning capabilities with OpenCog components*
 
 </div>
 
-> **🔄 IMPORTANT UPDATE (March 31st)**: Archon now includes a library of prebuilt tools, examples, and MCP server integrations. Archon can now incorporate these resources when building new agents, significantly enhancing capabilities and reducing hallucinations. Note that the examples/tool library for Archon is just starting out. Please feel free to contribute examples, MCP servers, and prebuilt tools!
+> **🔄 IMPORTANT UPDATE (May 6th, 2025)**: Archon now includes integrated OpenCog components for enhanced reasoning capabilities. The new implementation provides advanced knowledge representation, collaborative reasoning, and improved agent communication. Try out the demo with `python utils/opencog_demo.py`!
 
 Archon is the world's first **"Agenteer"**, an AI agent designed to autonomously build, refine, and optimize other AI agents. 
 
@@ -22,7 +22,7 @@ Through its iterative development, Archon showcases the power of planning, feedb
 
 ## Important Links
 
-- The current version of Archon is V6 as mentioned above - see [V6 Documentation](iterations/v6-tool-library-integration/README.md) for details.
+- The current version of Archon is V7 as mentioned above - see [V7 Documentation](iterations/v7-opencog-integration/README.md) for details.
 
 - I **just** created the [Archon community](https://thinktank.ottomator.ai/c/archon/30) forum over in the oTTomator Think Tank! Please post any questions you have there!
 
@@ -36,9 +36,9 @@ Archon demonstrates three key principles in modern AI development:
 2. **Domain Knowledge Integration**: Seamless embedding of frameworks like Pydantic AI and LangGraph within autonomous workflows
 3. **Scalable Architecture**: Modular design supporting maintainability, cost optimization, and ethical AI practices
 
-## Getting Started with V6 (current version)
+## Getting Started with V7 (current version)
 
-Since V6 is the current version of Archon, all the code for V6 is in both the main directory and `archon/iterations/v6-tool-library-integration` directory.
+Since V7 is the current version of Archon, all the code for V7 is in both the main directory and `archon/iterations/v7-opencog-integration` directory.
 
 Note that the examples/tool library for Archon is just starting out. Please feel free to contribute examples, MCP servers, and prebuilt tools!
 
@@ -188,7 +188,7 @@ This ensures you're always running the most recent version of Archon with all th
 - Improved workflow orchestration with LangGraph
 - [Learn more about V5](iterations/v5-parallel-specialized-agents/README.md)
 
-### V6: Current - Tool Library and MCP Integration
+### V6: Tool Library and MCP Integration
 - Comprehensive library of prebuilt tools, examples, and agent templates
 - Integration with MCP servers for massive amounts of prebuilt tools
 - Advisor agent that recommends relevant tools and examples based on user requirements
@@ -198,8 +198,14 @@ This ensures you're always running the most recent version of Archon with all th
 - Reduced development time through component reuse
 - [Learn more about V6](iterations/v6-tool-library-integration/README.md)
 
+### V7: Current - OpenCog Integration
+- Integration of OpenCog components for advanced reasoning capabilities
+- Enhanced knowledge representation and collaborative reasoning
+- Improved agent communication and decision-making processes
+- Demo available with `python utils/opencog_demo.py`
+- [Learn more about V7](iterations/v7-opencog-integration/README.md)
+
 ### Future Iterations
-- V7: LangGraph Documentation - Allow Archon to build Pydantic AI AND LangGraph agents
 - V8: Self-Feedback Loop - Automated validation and error correction
 - V9: Self Agent Execution - Testing and iterating on agents in an isolated environment
 - V10: Multi-Framework Support - Framework-agnostic agent generation
@@ -258,6 +264,7 @@ The flow works like this:
 - `utils/`: Utility functions and database setup
   - `utils.py`: Shared utility functions
   - `site_pages.sql`: Database setup commands
+  - `opencog_demo.py`: Demo script for OpenCog integration
 
 ### Workbench
 - `workbench/`: Created at runtime, files specific to your environment
@@ -323,3 +330,4 @@ For version-specific details:
 - [V4 Documentation](iterations/v4-streamlit-ui-overhaul/README.md)
 - [V5 Documentation](iterations/v5-parallel-specialized-agents/README.md)
 - [V6 Documentation](iterations/v6-tool-library-integration/README.md)
+- [V7 Documentation](iterations/v7-opencog-integration/README.md)
