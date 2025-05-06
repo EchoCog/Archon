@@ -29,6 +29,12 @@ from archon.refiner_agents.agent_refiner_agent import agent_refiner_agent, Agent
 from archon.agent_tools import list_documentation_pages_tool
 from utils.utils import get_env_var, get_clients
 
+# Import OpenCog dependencies
+import opencog
+import opencog.atomspace
+import opencog.cogserver
+import opencog.utilities
+
 # Load environment variables
 load_dotenv()
 
@@ -79,8 +85,18 @@ class AgentState(TypedDict):
     refined_tools: str
     refined_agent: str
 
+    # Add OpenCog components
+    atomspace: Any
+    cogserver: Any
+    utilities: Any
+
 # Scope Definition Node with Reasoner LLM
 async def define_scope_with_reasoner(state: AgentState):
+    # Initialize OpenCog components
+    atomspace = opencog.atomspace.AtomSpace()
+    cogserver = opencog.cogserver.CogServer(atomspace)
+    utilities = opencog.utilities.Utilities(atomspace)
+
     # First, get the documentation pages so the reasoner can decide which ones are necessary
     documentation_pages = await list_documentation_pages_tool(supabase)
     documentation_pages_str = "\n".join(documentation_pages)
@@ -114,7 +130,7 @@ async def define_scope_with_reasoner(state: AgentState):
     with open(scope_path, "w", encoding="utf-8") as f:
         f.write(scope)
     
-    return {"scope": scope}
+    return {"scope": scope, "atomspace": atomspace, "cogserver": cogserver, "utilities": utilities}
 
 # Advisor agent - create a starting point based on examples and prebuilt tools/MCP servers
 async def advisor_with_examples(state: AgentState):

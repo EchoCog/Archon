@@ -4,7 +4,13 @@ from typing import Optional, Dict, Any
 from archon.archon_graph import agentic_flow
 from langgraph.types import Command
 from utils.utils import write_to_log
-    
+
+# Import OpenCog dependencies
+import opencog
+import opencog.atomspace
+import opencog.cogserver
+import opencog.utilities
+
 app = FastAPI()
 
 class InvokeRequest(BaseModel):
@@ -39,11 +45,16 @@ async def invoke_agent(request: InvokeRequest):
             }
         }
 
+        # Initialize OpenCog components
+        atomspace = opencog.atomspace.AtomSpace()
+        cogserver = opencog.cogserver.CogServer(atomspace)
+        utilities = opencog.utilities.Utilities(atomspace)
+
         response = ""
         if request.is_first_message:
             write_to_log(f"Processing first message for thread {request.thread_id}")
             async for msg in agentic_flow.astream(
-                {"latest_user_message": request.message}, 
+                {"latest_user_message": request.message, "atomspace": atomspace, "cogserver": cogserver, "utilities": utilities}, 
                 config,
                 stream_mode="custom"
             ):

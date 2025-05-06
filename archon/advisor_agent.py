@@ -22,6 +22,12 @@ from utils.utils import get_env_var
 from archon.agent_prompts import advisor_prompt
 from archon.agent_tools import get_file_content_tool
 
+# Import OpenCog dependencies
+import opencog
+import opencog.atomspace
+import opencog.cogserver
+import opencog.utilities
+
 load_dotenv()
 
 provider = get_env_var('LLM_PROVIDER') or 'OpenAI'
@@ -36,6 +42,9 @@ logfire.configure(send_to_logfire='if-token-present')
 @dataclass
 class AdvisorDeps:
     file_list: List[str]
+    atomspace: Any
+    cogserver: Any
+    utilities: Any
 
 advisor_agent = Agent(
     model,
@@ -57,11 +66,12 @@ def add_file_list(ctx: RunContext[str]) -> str:
     """
 
 @advisor_agent.tool_plain
-def get_file_content(file_path: str) -> str:
+def get_file_content(ctx: RunContext[AdvisorDeps], file_path: str) -> str:
     """
     Retrieves the content of a specific file. Use this to get the contents of an example, tool, config for an MCP server
     
     Args:
+        ctx: The context including OpenCog components
         file_path: The path to the file
         
     Returns:
