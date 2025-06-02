@@ -64,7 +64,7 @@ jsonpointer==3.0.0
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 jsonschema_rs==0.30.0
-langchain-core==0.3.33
+langchain-core==0.3.63
 langgraph==0.2.69
 langgraph-checkpoint==2.0.10
 langgraph-cli==0.1.71
