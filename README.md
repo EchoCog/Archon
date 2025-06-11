@@ -237,6 +237,19 @@ The flow works like this:
 7. The process goes back to step 4 until you say the agent is complete
 8. Once the agent is complete, Archon spits out the full code again with instructions for running it
 
+### 📚 Comprehensive Architecture Documentation
+
+For detailed technical documentation with Mermaid diagrams and architectural analysis, see:
+
+**[📋 Complete Documentation Index](docs/README.md)**
+
+Key documentation includes:
+- **[System Architecture](docs/ARCHITECTURE.md)**: High-level overview with cognitive orchestration layers
+- **[OpenCog Integration](docs/OPENCOG_INTEGRATION.md)**: Neural-symbolic integration and reasoning capabilities  
+- **[Workflow & Data Flow](docs/WORKFLOW.md)**: Recursive implementation pathways and adaptive attention allocation
+
+The documentation captures Archon's recursive, hypergraph-centric architecture and demonstrates how emergent cognitive patterns arise through distributed cognition across specialized agents.
+
 ## File Architecture
 
 ### Core Files
