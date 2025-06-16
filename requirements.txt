@@ -139,7 +139,7 @@ requests==2.32.3
 requests-toolbelt==1.0.0
 rich==14.0.0
 rich-toolkit==0.13.2
-rpds-py==0.22.3
+rpds-py==0.25.1
 rsa==4.9
 shellingham==1.5.4
 six==1.17.0
