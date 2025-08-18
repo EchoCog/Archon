@@ -1,0 +1,392 @@
+{
+  "name": "home-assistant-mcp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for Home Assistant integration with Archon agents",
+  "capabilities": {
+    "resources": true,
+    "tools": true,
+    "prompts": true
+  },
+  "connection": {
+    "type": "stdio",
+    "command": "python",
+    "args": ["-m", "mcp_home_assistant_server"],
+    "env": {
+      "HOME_ASSISTANT_URL": "${HOME_ASSISTANT_URL}",
+      "HOME_ASSISTANT_TOKEN": "${HOME_ASSISTANT_TOKEN}"
+    }
+  },
+  "tools": [
+    {
+      "name": "ha_call_service",
+      "description": "Call a Home Assistant service to control devices",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Service domain (e.g., light, climate, switch)"
+          },
+          "service": {
+            "type": "string", 
+            "description": "Service name (e.g., turn_on, turn_off, set_temperature)"
+          },
+          "entity_id": {
+            "type": "string",
+            "description": "Target entity ID (optional)"
+          },
+          "service_data": {
+            "type": "object",
+            "description": "Additional service parameters"
+          }
+        },
+        "required": ["domain", "service"]
+      }
+    },
+    {
+      "name": "ha_get_state",
+      "description": "Get the current state and attributes of a Home Assistant entity",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_id": {
+            "type": "string",
+            "description": "The entity ID to query"
+          }
+        },
+        "required": ["entity_id"]
+      }
+    },
+    {
+      "name": "ha_get_states",
+      "description": "Get all entity states, optionally filtered by domain",
+      "parameters": {
+        "type": "object", 
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Optional domain filter (e.g., light, sensor, climate)"
+          }
+        }
+      }
+    },
+    {
+      "name": "ha_get_history",
+      "description": "Get historical data for an entity to analyze patterns",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_id": {
+            "type": "string",
+            "description": "Entity to get history for"
+          },
+          "hours": {
+            "type": "integer",
+            "description": "Number of hours of history to retrieve (default: 24)",
+            "default": 24
+          }
+        },
+        "required": ["entity_id"]
+      }
+    },
+    {
+      "name": "ha_control_lights",
+      "description": "High-level light control with natural language actions",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Action to perform (on, off, dim, brighten)",
+            "enum": ["on", "off", "dim", "brighten", "turn_on", "turn_off"]
+          },
+          "entity_ids": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of light entity IDs (if empty, affects all lights)"
+          },
+          "brightness": {
+            "type": "integer",
+            "description": "Brightness level (0-255)",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "color_name": {
+            "type": "string",
+            "description": "Color name (e.g., red, blue, white)"
+          }
+        },
+        "required": ["action"]
+      }
+    },
+    {
+      "name": "ha_control_climate",
+      "description": "Control HVAC/climate devices",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "temperature": {
+            "type": "number",
+            "description": "Target temperature"
+          },
+          "mode": {
+            "type": "string",
+            "description": "HVAC mode",
+            "enum": ["heat", "cool", "auto", "off", "fan_only", "dry"]
+          },
+          "entity_ids": {
+            "type": "array", 
+            "items": {"type": "string"},
+            "description": "List of climate entity IDs (if empty, affects all climate devices)"
+          }
+        }
+      }
+    },
+    {
+      "name": "ha_get_security_status",
+      "description": "Get status of security-related devices (locks, alarms, sensors)",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "ha_analyze_patterns",
+      "description": "Analyze usage patterns for entities over time",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_id": {
+            "type": "string",
+            "description": "Entity to analyze"
+          },
+          "days": {
+            "type": "integer",
+            "description": "Number of days to analyze (default: 7)",
+            "default": 7
+          }
+        },
+        "required": ["entity_id"]
+      }
+    },
+    {
+      "name": "ha_get_energy_usage",
+      "description": "Get energy usage information and optimization suggestions",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "ha_create_automation",
+      "description": "Create a new Home Assistant automation",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "automation_config": {
+            "type": "object",
+            "description": "Complete automation configuration",
+            "properties": {
+              "alias": {"type": "string"},
+              "trigger": {"type": "object"},
+              "condition": {"type": "object"},
+              "action": {"type": "object"}
+            },
+            "required": ["alias", "trigger", "action"]
+          }
+        },
+        "required": ["automation_config"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "ha://config",
+      "name": "Home Assistant Configuration",
+      "description": "Current Home Assistant system configuration and info"
+    },
+    {
+      "uri": "ha://entities",
+      "name": "All Entities",
+      "description": "List of all entities in Home Assistant"
+    },
+    {
+      "uri": "ha://entities/lights",
+      "name": "Light Entities", 
+      "description": "All lighting devices"
+    },
+    {
+      "uri": "ha://entities/climate",
+      "name": "Climate Entities",
+      "description": "All HVAC and climate control devices"
+    },
+    {
+      "uri": "ha://entities/sensors",
+      "name": "Sensor Entities",
+      "description": "All sensor devices"
+    },
+    {
+      "uri": "ha://entities/security",
+      "name": "Security Entities", 
+      "description": "Security-related devices (locks, alarms, motion sensors)"
+    },
+    {
+      "uri": "ha://automations",
+      "name": "Automations",
+      "description": "Current Home Assistant automations"
+    },
+    {
+      "uri": "ha://scenes",
+      "name": "Scenes",
+      "description": "Available scenes"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "control_device",
+      "description": "Generate natural language commands for device control",
+      "arguments": [
+        {
+          "name": "device_type",
+          "description": "Type of device to control (light, climate, security, etc.)",
+          "required": true
+        },
+        {
+          "name": "action",
+          "description": "Desired action",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "create_automation",
+      "description": "Generate Home Assistant automation configuration",
+      "arguments": [
+        {
+          "name": "description",
+          "description": "Natural language description of the automation",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "analyze_patterns",
+      "description": "Generate insights from device usage patterns", 
+      "arguments": [
+        {
+          "name": "entity_id",
+          "description": "Entity to analyze",
+          "required": true
+        },
+        {
+          "name": "time_period",
+          "description": "Time period for analysis",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "energy_optimization",
+      "description": "Generate energy saving recommendations",
+      "arguments": [
+        {
+          "name": "current_usage",
+          "description": "Current energy usage data",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "examples": {
+    "basic_control": {
+      "description": "Basic device control examples",
+      "examples": [
+        "Turn on all lights",
+        "Set temperature to 72 degrees", 
+        "Lock the front door",
+        "Turn off the living room lights"
+      ]
+    },
+    "advanced_automation": {
+      "description": "Advanced automation examples",
+      "examples": [
+        "Create a good morning scene that turns on lights and starts coffee",
+        "Set up motion-activated lighting for the hallway",
+        "Create an energy-saving automation for when nobody is home",
+        "Set up security monitoring when the alarm is armed"
+      ]
+    },
+    "pattern_analysis": {
+      "description": "Usage pattern analysis examples", 
+      "examples": [
+        "Analyze when the living room lights are used most",
+        "Show energy usage patterns for the HVAC system",
+        "Find the best times to run the dishwasher for energy savings",
+        "Identify unused devices that could be automated"
+      ]
+    }
+  },
+  "setup_instructions": {
+    "environment_variables": [
+      {
+        "name": "HOME_ASSISTANT_URL",
+        "description": "URL of your Home Assistant instance (e.g., http://homeassistant.local:8123)",
+        "required": true
+      },
+      {
+        "name": "HOME_ASSISTANT_TOKEN", 
+        "description": "Long-lived access token from Home Assistant",
+        "required": true,
+        "setup_steps": [
+          "Go to your Home Assistant profile page",
+          "Scroll down to 'Long-Lived Access Tokens'",
+          "Click 'Create Token'", 
+          "Give it a name like 'Archon MCP Integration'",
+          "Copy the generated token"
+        ]
+      }
+    ],
+    "home_assistant_config": {
+      "description": "Required Home Assistant configuration",
+      "config_yaml": {
+        "api": null,
+        "websocket_api": null,
+        "http": {
+          "cors_allowed_origins": [
+            "http://localhost:8501",
+            "http://localhost:8100"
+          ]
+        },
+        "recorder": {
+          "db_url": "sqlite:///config/home-assistant_v2.db",
+          "purge_keep_days": 365
+        }
+      }
+    }
+  },
+  "compatibility": {
+    "home_assistant_versions": ">=2023.1.0",
+    "archon_versions": ">=7.0.0",
+    "python_versions": ">=3.11"
+  },
+  "integration_notes": {
+    "security": [
+      "Always use HTTPS in production",
+      "Limit token permissions to necessary scopes",
+      "Regularly rotate access tokens",
+      "Use firewall rules to restrict access"
+    ],
+    "performance": [
+      "Use WebSocket connections for real-time updates",
+      "Implement caching for frequently accessed data",
+      "Batch multiple service calls when possible",
+      "Monitor API rate limits"
+    ],
+    "reliability": [
+      "Implement retry logic for failed API calls",
+      "Handle network timeouts gracefully",
+      "Validate entity IDs before making calls",
+      "Log all actions for debugging"
+    ]
+  }
+}
