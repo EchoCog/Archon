@@ -62,6 +62,48 @@ This documentation provides a complete technical overview of the Archon AI agent
 - Cognitive Architecture (graph TB) - OpenCog integration layers
 - Deployment Scenarios (flowchart) - Various setup options
 
+### 🚀 [Performance & Scaling](PERFORMANCE_SCALING.md)
+**Optimization strategies and scaling best practices**
+- Performance optimization techniques and caching strategies
+- Horizontal and vertical scaling architectures
+- Monitoring and observability with key performance indicators
+- Resource management and capacity planning
+- Home Assistant integration performance tuning
+
+**Key Diagrams:**
+- Performance Layers (graph TB) - Multi-tier optimization
+- Scaling Architecture (graph TB) - Load balancing and clustering
+- Monitoring Dashboard (graph LR) - Metrics collection and visualization
+- Resource Management (flowchart TD) - Capacity planning
+
+### 🔧 [Troubleshooting Guide](TROUBLESHOOTING.md)
+**Comprehensive issue diagnosis and resolution**
+- Emergency troubleshooting flowcharts and quick fixes
+- Common issues with step-by-step solutions
+- Log analysis techniques and debugging tools
+- Performance issue diagnosis and optimization
+- Home Assistant integration troubleshooting
+
+**Key Diagrams:**
+- Issue Resolution Flowchart (flowchart TD) - Systematic debugging
+- Diagnostic Decision Tree (graph TD) - Problem identification
+- Log Analysis Flow (graph TB) - Error pattern recognition
+- Performance Debugging (stateDiagram-v2) - Issue classification
+
+### 🔌 [API Documentation](API_DOCUMENTATION.md)
+**Complete API reference and integration guide**
+- REST API endpoints with request/response examples
+- WebSocket API for real-time communication
+- MCP protocol integration for AI IDEs
+- Authentication, security, and rate limiting
+- SDK examples for Python and JavaScript
+
+**Key Diagrams:**
+- API Architecture (graph TB) - Service interaction patterns
+- Authentication Flow (sequenceDiagram) - Security implementation
+- Performance Targets (graph LR) - Response time expectations
+- Error Handling (stateDiagram-v2) - Status code workflows
+
 ## Architectural Principles
 
 ### Recursive Implementation Pathways
@@ -91,6 +133,9 @@ The Archon system demonstrates recursive cognitive patterns through:
 | **OpenCog Integration** | [OPENCOG_INTEGRATION.md](OPENCOG_INTEGRATION.md) | Cognitive substrate and reasoning |
 | **Workflow Patterns** | [WORKFLOW.md](WORKFLOW.md) | Data flow and agent interactions |
 | **Home Assistant Integration** | [HOME_ASSISTANT_INTEGRATION.md](HOME_ASSISTANT_INTEGRATION.md) | Smart home automation with Marduk's Lab |
+| **Performance & Scaling** | [PERFORMANCE_SCALING.md](PERFORMANCE_SCALING.md) | Optimization and scaling strategies |
+| **Troubleshooting** | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Issue diagnosis and resolution |
+| **API Reference** | [API_DOCUMENTATION.md](API_DOCUMENTATION.md) | Complete API and integration guide |
 
 ## Diagram Types Used
 
@@ -123,6 +168,7 @@ The Archon system demonstrates recursive cognitive patterns through:
 - **Supabase**: Vector database for documentation storage
 - **Streamlit**: User interface and interaction management
 - **Docker**: Containerized deployment and scaling
+- **Home Assistant**: Smart home automation platform for Marduk's Lab
 
 ### Design Philosophy
 The documentation reflects Archon's core philosophy of **transmuting implicit cognitive patterns into explicit, actionable knowledge** through:
@@ -130,6 +176,16 @@ The documentation reflects Archon's core philosophy of **transmuting implicit co
 - Detailed annotation of recursive implementation pathways  
 - Clear explanation of emergent cognitive behaviors
 - Technical precision enabling distributed cognition
+- Integration patterns for physical-digital convergence
+
+### Documentation Coverage
+This comprehensive documentation suite provides:
+- **Complete Architecture Analysis**: From high-level design to implementation details
+- **Practical Integration Guides**: Step-by-step setup for all major integrations
+- **Performance Optimization**: Scaling strategies and monitoring best practices
+- **Troubleshooting Support**: Systematic issue diagnosis and resolution
+- **API Reference**: Complete technical specification for developers
+- **Visual Learning**: Extensive mermaid diagrams for complex concepts
 
 ## Contributing to Documentation
 
