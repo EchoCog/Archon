@@ -449,7 +449,7 @@ As new patterns emerge, the documentation framework supports:
 
 ```mermaid
 graph TD
-    subgraph "Container Ecosystem"
+    subgraph "🐳 Container Ecosystem"
         MC[Main Container - Archon]
         MCPS[MCP Server Container]
     end
@@ -469,6 +469,7 @@ graph TD
         SB[(Supabase Vector DB)]
         LLMP[LLM Providers]
         IDES[AI IDEs]
+        HA_EXT[🏠 Home Assistant]
     end
     
     MC --> UI
@@ -483,14 +484,82 @@ graph TD
     AG <--> LLMP
     IR <--> IDES
     MS <--> GS
+    GS <--> HA_EXT
     
     classDef container fill:#e3f2fd
     classDef service fill:#f1f8e9
     classDef external fill:#fce4ec
+    classDef homeassistant fill:#4caf50
     
     class MC,MCPS container
     class UI,GS,AG,MS,IR service
     class SB,LLMP,IDES external
+    class HA_EXT homeassistant
+```
+
+### Home Assistant Integration Architecture
+
+For smart home automation through Marduk's Lab, Archon includes sophisticated Home Assistant integration:
+
+```mermaid
+graph TB
+    subgraph "🤖 Archon AI Layer"
+        ARCHON_CORE[Archon Core]
+        HA_AGENT[HA Control Agent]
+        NLP_ENGINE[NLP Engine]
+        PATTERN_LEARN[Pattern Learning]
+    end
+    
+    subgraph "🏠 Home Assistant Layer"
+        HA_CORE[Home Assistant Core]
+        HA_API[REST API]
+        HA_WS[WebSocket API]
+        HA_AUTO[Automation Engine]
+        HA_SCENES[Scene Manager]
+    end
+    
+    subgraph "📱 Device Layer"
+        ZIGBEE[Zigbee Devices]
+        WIFI[WiFi Devices]
+        ZWAVE[Z-Wave Devices]
+        BLUETOOTH[Bluetooth LE]
+    end
+    
+    subgraph "🧠 Intelligence Layer"
+        OPENCOG[OpenCog AtomSpace]
+        ML_MODELS[ML Models]
+        PREDICTION[Predictive Engine]
+        CONTEXT[Context Awareness]
+    end
+    
+    ARCHON_CORE --> HA_AGENT
+    HA_AGENT <--> HA_API
+    HA_AGENT <--> HA_WS
+    NLP_ENGINE --> HA_AUTO
+    PATTERN_LEARN --> HA_SCENES
+    
+    HA_API --> HA_CORE
+    HA_WS --> HA_CORE
+    HA_CORE --> ZIGBEE
+    HA_CORE --> WIFI
+    HA_CORE --> ZWAVE
+    HA_CORE --> BLUETOOTH
+    
+    HA_AGENT --> OPENCOG
+    OPENCOG --> ML_MODELS
+    ML_MODELS --> PREDICTION
+    PREDICTION --> CONTEXT
+    CONTEXT --> HA_AGENT
+    
+    classDef archon fill:#2196f3
+    classDef ha fill:#4caf50
+    classDef devices fill:#ff9800
+    classDef intelligence fill:#9c27b0
+    
+    class ARCHON_CORE,HA_AGENT,NLP_ENGINE,PATTERN_LEARN archon
+    class HA_CORE,HA_API,HA_WS,HA_AUTO,HA_SCENES ha
+    class ZIGBEE,WIFI,ZWAVE,BLUETOOTH devices
+    class OPENCOG,ML_MODELS,PREDICTION,CONTEXT intelligence
 ```
 
 ### Vector Database Schema
@@ -517,6 +586,8 @@ Key environment variables for cognitive optimization:
 - `LLM_PROVIDER`: Provider selection (OpenAI, Anthropic, Ollama)
 - `BASE_URL`: Custom LLM endpoint configuration
 - `SUPABASE_*`: Vector database connection parameters
+- `HOME_ASSISTANT_URL`: Home Assistant instance URL for Marduk's Lab
+- `HOME_ASSISTANT_TOKEN`: Long-lived access token for HA integration
 
 ## Future Architecture Evolution
 
@@ -528,6 +599,38 @@ Key environment variables for cognitive optimization:
 - **V11**: Autonomous framework learning with self-updating adapters
 - **V12**: Advanced RAG techniques with enhanced retrieval mechanisms
 - **V13**: MCP marketplace integration with agent distribution
+- **Marduk's Lab Expansion**: 
+  - Advanced predictive home automation
+  - Energy optimization algorithms
+  - Health and wellness monitoring integration
+  - Voice assistant ecosystem integration
+
+### Marduk's Lab Evolution Roadmap
+
+```mermaid
+timeline
+    title Marduk's Lab Development Timeline
+    
+    section Current (V7)
+        Basic Integration : Home Assistant API connection
+                         : Natural language device control
+                         : Simple automation triggers
+    
+    section V8 Enhancement
+        AI Learning : Pattern recognition implementation
+                   : Predictive automation suggestions
+                   : Energy usage optimization
+    
+    section V9 Advanced
+        Voice Integration : Multi-assistant support
+                         : Ambient voice control
+                         : Context-aware responses
+    
+    section V10 Ecosystem
+        Full Automation : Autonomous home management
+                       : Health monitoring integration
+                       : Community automation sharing
+```
 
 ### Adaptive Architecture Principles
 
@@ -538,5 +641,6 @@ The Archon architecture embodies principles of:
 3. **Cognitive Substrate Sharing**: OpenCog provides shared knowledge representation
 4. **Hypergraph Relationship Discovery**: New patterns emerge through graph analysis
 5. **Distributed Cognition**: Knowledge and processing distributed across specialized agents
+6. **Physical-Digital Convergence**: Marduk's Lab bridges AI agents with physical world automation
 
 This architectural documentation serves as a living document that evolves with the system, capturing both explicit design patterns and emergent cognitive behaviors that arise from the recursive, hypergraph-centric implementation.

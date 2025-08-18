@@ -48,6 +48,20 @@ This documentation provides a complete technical overview of the Archon AI agent
 - Complete Sequence (sequenceDiagram) - End-to-end workflow
 - Attention Allocation (graph TD) - Adaptive mechanisms
 
+### 🏠 [Home Assistant Integration - Marduk's Lab](HOME_ASSISTANT_INTEGRATION.md)
+**Complete smart home automation ecosystem with AI agent integration**
+- Comprehensive Home Assistant setup and configuration guide
+- Marduk's Lab architecture and deployment patterns
+- Natural language control and predictive automation
+- OpenCog-powered learning and pattern recognition
+- Security, privacy, and performance optimization strategies
+
+**Key Diagrams:**
+- Marduk's Lab Ecosystem (graph TB) - Full integration overview
+- Agent Workflow (sequenceDiagram) - Natural language processing
+- Cognitive Architecture (graph TB) - OpenCog integration layers
+- Deployment Scenarios (flowchart) - Various setup options
+
 ## Architectural Principles
 
 ### Recursive Implementation Pathways
@@ -76,6 +90,7 @@ The Archon system demonstrates recursive cognitive patterns through:
 | **System Architecture** | [ARCHITECTURE.md](ARCHITECTURE.md) | Overall system design and components |
 | **OpenCog Integration** | [OPENCOG_INTEGRATION.md](OPENCOG_INTEGRATION.md) | Cognitive substrate and reasoning |
 | **Workflow Patterns** | [WORKFLOW.md](WORKFLOW.md) | Data flow and agent interactions |
+| **Home Assistant Integration** | [HOME_ASSISTANT_INTEGRATION.md](HOME_ASSISTANT_INTEGRATION.md) | Smart home automation with Marduk's Lab |
 
 ## Diagram Types Used
 
