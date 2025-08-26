@@ -11,7 +11,7 @@
 
 </div>
 
-> **🔄 IMPORTANT UPDATE (May 6th, 2025)**: Archon now includes integrated OpenCog components for enhanced reasoning capabilities. The new implementation provides advanced knowledge representation, collaborative reasoning, and improved agent communication. Try out the demo with `python utils/opencog_demo.py`!
+> **🔄 IMPORTANT UPDATE (August 26th, 2025)**: Archon now features fully integrated OpenCog components with enhanced Marduk's Lab home automation! The new implementation provides advanced knowledge representation, collaborative reasoning, improved agent communication, and cognitive home automation capabilities. Test the integration with `python test_simple_integration.py`!
 
 ## 🎯 System Overview
 
@@ -47,10 +47,11 @@ graph TB
         EX[Example Agents]
     end
     
-    subgraph "🏠 Marduk's Lab Integration"
+    subgraph "🏠 Marduk's Lab Cognitive Integration"
         HA[Home Assistant]
         IOT[IoT Devices]
-        AUTO[Automation Hub]
+        AUTO[Cognitive Automation]
+        OPENCOG[OpenCog AtomSpace]
     end
     
     UI --> API
@@ -73,6 +74,8 @@ graph TB
     API --> HA
     HA --> IOT
     HA --> AUTO
+    AS --> OPENCOG
+    OPENCOG --> AUTO
     
     classDef interface fill:#e1f5fe
     classDef cognitive fill:#f3e5f5
@@ -84,7 +87,7 @@ graph TB
     class LG,AS,RS cognitive
     class RA,AA,CA,PR,TR,AR agents
     class VDB,DOC,TL,EX knowledge
-    class HA,IOT,AUTO integration
+    class HA,IOT,AUTO,OPENCOG integration
 ```
 
 It serves both as a practical tool for developers and as an educational framework demonstrating the evolution of agentic systems. Archon will be developed in iterations, starting with just a simple Pydantic AI agent that can build other Pydantic AI agents, all the way to a full agentic workflow using LangGraph that can build other AI agents with any framework.
@@ -129,8 +132,8 @@ sequenceDiagram
     C->>U: Integrated improvements
 ```
 
-### 🏠 Marduk's Lab - Home Assistant Integration
-Archon now includes seamless integration with Home Assistant, creating **Marduk's Lab** - a comprehensive home automation and AI agent ecosystem.
+### 🏠 Marduk's Lab - OpenCog Enhanced Home Assistant Integration
+Archon now includes seamless integration with Home Assistant enhanced by OpenCog cognitive architecture, creating **Marduk's Lab** - a comprehensive cognitive home automation and AI agent ecosystem.
 
 ```mermaid
 graph TB
@@ -206,31 +209,36 @@ Archon demonstrates three key principles in modern AI development:
 2. **📚 Domain Knowledge Integration**: Seamless embedding of frameworks like Pydantic AI and LangGraph within autonomous workflows  
 3. **🏗️ Scalable Architecture**: Modular design supporting maintainability, cost optimization, and ethical AI practices
 
-### 🏠 Marduk's Lab Vision
-Marduk's Lab represents the convergence of AI agents and home automation, creating an intelligent ecosystem where:
-- **Adaptive Intelligence**: AI agents learn from household patterns and preferences
-- **Predictive Automation**: Anticipate needs before they're expressed
-- **Seamless Integration**: Natural language control of all smart home devices
-- **Extensible Framework**: Easy addition of new devices and capabilities
+### 🏠 Marduk's Lab Cognitive Vision
+Marduk's Lab represents the convergence of AI agents, OpenCog cognitive architecture, and home automation, creating an intelligent ecosystem where:
+- **Cognitive Intelligence**: OpenCog AtomSpace provides semantic understanding and pattern recognition  
+- **Adaptive Learning**: AI agents learn from household patterns using cognitive reasoning
+- **Predictive Automation**: Anticipate needs using OpenCog's predictive capabilities
+- **Seamless Integration**: Natural language control with contextual understanding
+- **Knowledge Persistence**: Device states and patterns stored in cognitive AtomSpace
+- **Collaborative Reasoning**: Knowledge sharing between Archon agents through cognitive substrate
 
 ```mermaid
 mindmap
   root((Marduk's Lab))
-    Intelligence
-      Natural Language
-      Pattern Learning
-      Predictive Analytics
-      Context Awareness
-    Automation
-      Schedule Based
-      Event Driven
-      Condition Triggered
-      ML Optimized
+    Cognitive Intelligence
+      OpenCog AtomSpace
+      Semantic Understanding
+      Pattern Recognition
+      Temporal Reasoning
+      Knowledge Persistence
+    Enhanced Automation
+      Cognitive Scheduling
+      Predictive Triggers
+      Context-Aware Actions
+      Energy Optimization
+      Cross-Device Coordination
     Integration
       Home Assistant
       IoT Devices
       Cloud Services
       Local Processing
+      Archon Agents
     Experience
       Voice Control
       Mobile Apps
@@ -762,13 +770,13 @@ Key documentation includes:
 - **[System Architecture](docs/ARCHITECTURE.md)**: High-level overview with cognitive orchestration layers
 - **[OpenCog Integration](docs/OPENCOG_INTEGRATION.md)**: Neural-symbolic integration and reasoning capabilities  
 - **[Workflow & Data Flow](docs/WORKFLOW.md)**: Recursive implementation pathways and adaptive attention allocation
-- **[🏠 Home Assistant Integration](docs/HOME_ASSISTANT_INTEGRATION.md)**: Complete Marduk's Lab setup guide for smart home automation
+- **[🏠 Home Assistant Integration](docs/HOME_ASSISTANT_INTEGRATION.md)**: Complete Marduk's Lab setup guide with OpenCog cognitive enhancement
 
 The documentation captures Archon's recursive, hypergraph-centric architecture and demonstrates how emergent cognitive patterns arise through distributed cognition across specialized agents.
 
-### 🏠 Marduk's Lab Integration
+### 🏠 Marduk's Lab Cognitive Integration
 
-Archon seamlessly integrates with Home Assistant to create **Marduk's Lab** - an intelligent home automation ecosystem that learns, adapts, and anticipates your needs.
+Archon seamlessly integrates with Home Assistant through OpenCog cognitive architecture to create **Marduk's Lab** - an intelligent home automation ecosystem that learns, adapts, and anticipates your needs through advanced reasoning and pattern recognition.
 
 ```mermaid
 graph LR

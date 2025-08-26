@@ -1,17 +1,27 @@
-# 🏠 Marduk's Lab - Home Assistant Integration Guide
+# 🏠 Marduk's Lab - OpenCog Enhanced Home Assistant Integration Guide
 
 ## Overview
 
-Marduk's Lab represents the convergence of Archon's AI agent capabilities with Home Assistant's home automation platform, creating an intelligent ecosystem that learns, adapts, and anticipates your needs.
+Marduk's Lab represents the convergence of Archon's AI agent capabilities with Home Assistant's home automation platform, enhanced by OpenCog's cognitive architecture to create an intelligent ecosystem that learns, adapts, and anticipates your needs through advanced reasoning and pattern recognition.
+
+**🧠 NEW: OpenCog Cognitive Enhancement**
+Marduk's Lab now features integrated OpenCog components that provide:
+- **Cognitive Pattern Recognition**: Advanced analysis of device usage patterns
+- **Predictive Automation**: AI-driven suggestions based on learned behaviors
+- **Knowledge Persistence**: Device states and relationships stored in AtomSpace
+- **Temporal Reasoning**: Time-aware automation optimization
+- **Collaborative Intelligence**: Knowledge sharing with other Archon agents
 
 ```mermaid
 graph TB
-    subgraph "🏠 Marduk's Lab Ecosystem"
+    subgraph "🏠 Marduk's Lab Cognitive Ecosystem"
         subgraph "🤖 Archon AI Core"
             ARCHON[Archon Agent Builder]
             NLP[Natural Language Processing]
             ML[Machine Learning Models]
             REASONING[OpenCog Reasoning]
+            ATOMSPACE[AtomSpace Knowledge]
+            COGSERVER[CogServer Process Management]
         end
         
         subgraph "🏡 Home Assistant Hub"
@@ -36,12 +46,21 @@ graph TB
             NOTIFICATIONS[Push Notifications]
             VOICE[Voice Assistants]
         end
+        
+        subgraph "🧠 Cognitive Layer"
+            PATTERN[Pattern Recognition]
+            PREDICT[Predictive Analysis]
+            LEARN[Continuous Learning]
+            OPTIMIZE[Energy Optimization]
+        end
     end
     
     ARCHON --> HA
     NLP --> AUTO
     ML --> SCENES
     REASONING --> INTEGRATIONS
+    ATOMSPACE --> PATTERN
+    COGSERVER --> PREDICT
     
     HA --> LIGHTS
     HA --> CLIMATE
@@ -55,15 +74,22 @@ graph TB
     HA <--> NOTIFICATIONS
     HA <--> VOICE
     
+    PATTERN --> LEARN
+    PREDICT --> OPTIMIZE
+    LEARN --> AUTO
+    OPTIMIZE --> SCENES
+    
     classDef ai fill:#2196f3
     classDef ha fill:#4caf50
     classDef devices fill:#ff9800
     classDef services fill:#9c27b0
+    classDef cognitive fill:#e91e63
     
-    class ARCHON,NLP,ML,REASONING ai
+    class ARCHON,NLP,ML,REASONING,ATOMSPACE,COGSERVER ai
     class HA,AUTO,SCENES,INTEGRATIONS ha
     class LIGHTS,CLIMATE,SECURITY,SENSORS,MEDIA,APPLIANCES devices
     class WEATHER,CALENDAR,NOTIFICATIONS,VOICE services
+    class PATTERN,PREDICT,LEARN,OPTIMIZE cognitive
 ```
 
 ## 🎯 Architecture Overview
@@ -210,121 +236,234 @@ template:
           learning_mode: "{{ states('input_boolean.learning_mode') }}"
 ```
 
-### Step 3: Create Archon Home Assistant Agent
+### Step 3: Create OpenCog-Enhanced Archon Home Assistant Agent
 
-In Archon, create an agent with the following configuration:
+In Archon, create an agent with the following enhanced configuration that leverages OpenCog's cognitive capabilities:
 
 ```python
-# Example agent prompt for Archon
+# Enhanced agent prompt for Archon with OpenCog integration
 agent_description = """
-Create a Home Assistant integration agent that can:
-1. Connect to Home Assistant via REST API and WebSocket
-2. Monitor all device states and changes
-3. Execute commands through natural language
-4. Learn usage patterns and suggest automations
-5. Provide intelligent scene recommendations
-6. Handle voice commands and text inputs
-7. Integrate with calendar and weather data
-8. Create predictive automations based on patterns
+Create a cognitive Home Assistant integration agent that can:
+1. Connect to Home Assistant via REST API and WebSocket with cognitive awareness
+2. Monitor all device states and store knowledge in OpenCog AtomSpace
+3. Execute commands through natural language with contextual understanding
+4. Learn usage patterns using OpenCog's pattern recognition engine
+5. Provide intelligent scene recommendations based on cognitive analysis
+6. Handle voice commands and text inputs with semantic understanding
+7. Integrate with calendar and weather data for contextual automation
+8. Create predictive automations using OpenCog's reasoning capabilities
+9. Store and share knowledge with other Archon agents through AtomSpace
+10. Continuously learn and adapt based on user interactions and preferences
+
+Enhanced features with OpenCog:
+- Cognitive pattern recognition for device usage optimization
+- Predictive automation suggestions based on learned behaviors
+- Knowledge persistence across sessions for continuous improvement
+- Temporal reasoning for time-aware automation scheduling
+- Energy efficiency optimization through semantic understanding
+- Cross-device relationship analysis for coordinated automation
 """
 ```
 
 ## 🔧 Advanced Configuration
 
-### Home Assistant Agent Tools
+### Enhanced Home Assistant Agent Tools with OpenCog
 
-The Archon-generated Home Assistant agent will include these core tools:
+The Archon-generated Home Assistant agent will include these enhanced cognitive tools:
 
 ```mermaid
 graph TB
-    subgraph "🛠️ Core Tools"
-        subgraph "Device Control"
-            LIGHTS_TOOL[Light Control Tool]
-            SWITCH_TOOL[Switch Control Tool]
-            CLIMATE_TOOL[Climate Control Tool]
-            MEDIA_TOOL[Media Control Tool]
+    subgraph "🛠️ Enhanced Cognitive Tools"
+        subgraph "Device Control with Cognition"
+            LIGHTS_TOOL[Cognitive Light Control]
+            SWITCH_TOOL[Smart Switch Control]
+            CLIMATE_TOOL[Intelligent Climate Control]
+            MEDIA_TOOL[Contextual Media Control]
         end
         
-        subgraph "Information Tools"
-            STATE_TOOL[State Query Tool]
-            HISTORY_TOOL[History Query Tool]
-            SENSOR_TOOL[Sensor Reading Tool]
-            WEATHER_TOOL[Weather Tool]
+        subgraph "Information Tools with Analysis"
+            STATE_TOOL[Cognitive State Query]
+            HISTORY_TOOL[Pattern History Analysis]
+            SENSOR_TOOL[Smart Sensor Reading]
+            WEATHER_TOOL[Contextual Weather Tool]
         end
         
-        subgraph "Automation Tools"
-            AUTO_TOOL[Automation Creator]
-            SCENE_TOOL[Scene Manager]
-            SCRIPT_TOOL[Script Runner]
-            TRIGGER_TOOL[Trigger Handler]
+        subgraph "Automation Tools with Learning"
+            AUTO_TOOL[Cognitive Automation Creator]
+            SCENE_TOOL[Intelligent Scene Manager]
+            SCRIPT_TOOL[Adaptive Script Runner]
+            TRIGGER_TOOL[Smart Trigger Handler]
         end
         
-        subgraph "AI Enhancement Tools"
-            PATTERN_TOOL[Pattern Analysis Tool]
-            PREDICT_TOOL[Prediction Tool]
-            LEARN_TOOL[Learning Tool]
-            CONTEXT_TOOL[Context Tool]
+        subgraph "OpenCog Cognitive Tools"
+            PATTERN_TOOL[Pattern Analysis Engine]
+            PREDICT_TOOL[Predictive Intelligence]
+            LEARN_TOOL[Continuous Learning System]
+            CONTEXT_TOOL[Contextual Reasoning]
+            ATOMSPACE_TOOL[Knowledge Persistence]
+            COGNITIVE_TOOL[Cognitive Insights Generator]
         end
     end
     
     classDef device fill:#4caf50
     classDef info fill:#2196f3
     classDef auto fill:#ff9800
-    classDef ai fill:#9c27b0
+    classDef cognitive fill:#e91e63
     
     class LIGHTS_TOOL,SWITCH_TOOL,CLIMATE_TOOL,MEDIA_TOOL device
     class STATE_TOOL,HISTORY_TOOL,SENSOR_TOOL,WEATHER_TOOL info
     class AUTO_TOOL,SCENE_TOOL,SCRIPT_TOOL,TRIGGER_TOOL auto
-    class PATTERN_TOOL,PREDICT_TOOL,LEARN_TOOL,CONTEXT_TOOL ai
+    class PATTERN_TOOL,PREDICT_TOOL,LEARN_TOOL,CONTEXT_TOOL,ATOMSPACE_TOOL,COGNITIVE_TOOL cognitive
 ```
 
-### Example Agent Implementation
+### Enhanced Example Agent Implementation
 
-Here's what the generated agent structure would look like:
+Here's what the generated agent structure looks like with OpenCog integration:
 
 ```python
-# agent.py - Core Home Assistant Agent
+# agent.py - Enhanced Cognitive Home Assistant Agent
 from pydantic_ai import Agent
-from homeassistant_tools import HATools
+from homeassistant_tools import CognitiveHomeAssistantAPI
+from utils.opencog import opencog
 
-ha_agent = Agent(
+# Enhanced dependencies with OpenCog components
+class HADeps(BaseModel):
+    model_config = {"arbitrary_types_allowed": True}
+    
+    ha_url: str
+    ha_token: str
+    ha_api: Optional[CognitiveHomeAssistantAPI] = None
+    # OpenCog cognitive components
+    atomspace: Optional[object] = None
+    cogserver: Optional[object] = None
+    utilities: Optional[object] = None
+
+marduk_agent = Agent(
     'claude-3-5-sonnet-20241022',
     deps_type=HADeps,
     system_prompt="""
-    You are Marduk, an intelligent home automation assistant powered by Archon.
-    You can control all smart home devices, learn from usage patterns, and 
-    proactively suggest improvements to make the home more comfortable and efficient.
+    You are Marduk, an intelligent home automation assistant powered by Archon's OpenCog cognitive architecture.
+    You can control all smart home devices through Home Assistant, learn from usage patterns using advanced
+    cognitive reasoning, and proactively suggest improvements to make the home more comfortable and efficient.
     
-    Core capabilities:
-    - Natural language device control
-    - Pattern recognition and learning
-    - Predictive automation suggestions
-    - Energy optimization recommendations
-    - Security monitoring and alerts
+    Enhanced capabilities with OpenCog integration:
+    - Natural language device control with contextual understanding
+    - Real-time device status monitoring stored in cognitive AtomSpace
+    - Advanced pattern recognition using OpenCog's reasoning engine
+    - Predictive automation suggestions based on cognitive learning
+    - Energy optimization recommendations with semantic understanding
+    - Knowledge persistence across sessions using AtomSpace
+    - Collaborative reasoning with other Archon agents
     """
 )
 
-# agent_tools.py - Home Assistant Integration Tools
-class HATools:
-    def __init__(self, ha_url: str, token: str):
-        self.ha_url = ha_url
-        self.token = token
-        self.session = aiohttp.ClientSession()
-    
-    async def call_service(self, domain: str, service: str, **kwargs):
-        """Call Home Assistant service"""
+# Enhanced cognitive tools
+async def initialize_cognitive_components(deps: HADeps):
+    """Initialize OpenCog components for cognitive reasoning."""
+    if not deps.atomspace:
+        deps.atomspace = opencog.atomspace()
+        deps.cogserver = opencog.cogserver(deps.atomspace)
+        deps.utilities = opencog.utilities(deps.atomspace)
         
-    async def get_state(self, entity_id: str):
-        """Get current state of entity"""
-        
-    async def get_history(self, entity_id: str, days: int = 1):
-        """Get historical data"""
-        
-    async def create_automation(self, config: dict):
-        """Create new automation"""
-        
-    async def analyze_patterns(self, entity_id: str):
-        """Analyze usage patterns with OpenCog"""
+        # Create foundational knowledge structure
+        home_concept = deps.atomspace.add_node("ConceptNode", "HomeAutomation")
+        device_concept = deps.atomspace.add_node("ConceptNode", "SmartDevice")
+        # ... establish relationships using AtomSpace
+
+@marduk_agent.tool
+async def call_ha_service_with_cognition(ctx, domain, service, entity_id=None, **service_data):
+    """Enhanced service calls with cognitive learning and insights."""
+    # Store interaction in AtomSpace for learning
+    # Generate cognitive insights
+    # Apply OpenCog reasoning for optimization suggestions
+    pass
+
+@marduk_agent.tool
+async def analyze_usage_patterns_with_cognition(ctx, entity_id, hours=24):
+    """Advanced pattern analysis using OpenCog's cognitive reasoning."""
+    # Comprehensive cognitive analysis with predictions and recommendations
+    pass
+```
+
+## 🧪 Testing the OpenCog Integration
+
+### Quick Integration Test
+
+To verify that OpenCog is properly integrated with Marduk's Lab, run the provided test script:
+
+```bash
+cd /path/to/Archon
+python test_simple_integration.py
+```
+
+This test will verify:
+- ✅ OpenCog components import successfully
+- ✅ AtomSpace initialization with home automation knowledge
+- ✅ Cognitive reasoning for device optimization
+- ✅ Pattern recognition and temporal reasoning capabilities
+- ✅ Knowledge persistence and querying functionality
+
+### Expected Test Output
+
+A successful integration test will show:
+```
+🏠🧠 Testing Marduk's Lab OpenCog Integration
+============================================================
+✅ OpenCog components imported successfully
+🧠 AtomSpace initialized: 0 atoms
+⚡ CogServer ready for cognitive processing
+🔍 Utilities configured for advanced reasoning
+
+🏠 Creating Home Automation Knowledge Base:
+--------------------------------------------------
+✅ Created core concepts: 5 atoms
+✅ Added Light device category
+✅ Added Climate device category
+... (additional device setup)
+
+🧠 Testing Cognitive Reasoning:
+----------------------------------------
+🎯 Cognitive Insights for Marduk's Lab:
+  📊 Managing 12 smart devices
+  💡 2 lighting devices - consider motion automation
+  🌡️ 1 climate devices - enable occupancy scheduling
+  🔒 4 security devices - configure smart alerts
+  🤖 Create smart scenes for common scenarios
+  ⚡ Implement energy monitoring for optimization
+
+🎉 Integration Test Complete!
+🌟 Marduk's Lab enhanced with 54+ knowledge atoms
+🧠 OpenCog cognitive reasoning ready for home automation
+
+✅ All tests passed! OpenCog integration successful.
+```
+
+### Enhanced Agent Testing
+
+To test the full enhanced agent functionality:
+
+1. **Configure Home Assistant**: Ensure your HA instance is accessible
+2. **Set API Token**: Configure your long-lived access token
+3. **Run Enhanced Agent**: Use the OpenCog-enhanced Marduk agent
+
+```python
+# Example test with real Home Assistant instance
+deps = HADeps(
+    ha_url="http://your-homeassistant:8123",
+    ha_token="your_long_lived_access_token"
+)
+
+# Test cognitive device control
+result = await call_ha_service_with_cognition(
+    ctx, 'light', 'turn_on', 
+    entity_id='light.living_room', 
+    brightness=255
+)
+
+# Test cognitive pattern analysis
+analysis = await analyze_usage_patterns_with_cognition(
+    ctx, 'light.living_room', hours=48
+)
 ```
 
 ## 🎯 Use Cases and Examples
