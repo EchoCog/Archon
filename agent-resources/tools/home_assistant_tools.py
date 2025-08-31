@@ -1,6 +1,6 @@
 """
-Home Assistant Integration Tools for Archon Agents
-Provides reusable tools for integrating with Home Assistant instances.
+Home Assistant Integration Tools for Archon Agents with OpenCog Enhancement
+Provides reusable tools for integrating with Home Assistant instances using cognitive reasoning.
 """
 
 import aiohttp
@@ -8,14 +8,21 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from pydantic import BaseModel
+import sys
+import os
 
-class HomeAssistantAPI:
+# Import OpenCog components for cognitive reasoning
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from utils.opencog import opencog
+
+class CognitiveHomeAssistantAPI:
     """
-    Home Assistant API client for Archon agents.
-    Provides methods to interact with Home Assistant via REST API.
+    Enhanced Home Assistant API client with OpenCog cognitive capabilities.
+    Provides methods to interact with Home Assistant via REST API while storing
+    knowledge in AtomSpace for intelligent reasoning and pattern recognition.
     """
     
-    def __init__(self, ha_url: str, ha_token: str):
+    def __init__(self, ha_url: str, ha_token: str, enable_cognition: bool = True):
         self.ha_url = ha_url.rstrip('/')
         self.ha_token = ha_token
         self.session = None
@@ -23,6 +30,104 @@ class HomeAssistantAPI:
             "Authorization": f"Bearer {ha_token}",
             "Content-Type": "application/json"
         }
+        
+        # Initialize OpenCog components for cognitive enhancement
+        self.enable_cognition = enable_cognition
+        if enable_cognition:
+            self.atomspace = opencog.atomspace.AtomSpace()
+            self.cogserver = opencog.cogserver.CogServer(self.atomspace)
+            self.utilities = opencog.utilities.Utilities(self.atomspace)
+            self._initialize_home_automation_knowledge()
+        else:
+            self.atomspace = None
+            self.cogserver = None
+            self.utilities = None
+    
+    def _initialize_home_automation_knowledge(self):
+        """Initialize foundational knowledge structure for home automation in AtomSpace."""
+        if not self.enable_cognition:
+            return
+            
+        # Create core concepts
+        home_concept = self.atomspace.add_node("ConceptNode", "HomeAutomation")
+        device_concept = self.atomspace.add_node("ConceptNode", "SmartDevice")
+        user_concept = self.atomspace.add_node("ConceptNode", "User")
+        pattern_concept = self.atomspace.add_node("ConceptNode", "UsagePattern")
+        energy_concept = self.atomspace.add_node("ConceptNode", "EnergyEfficiency")
+        
+        # Establish foundational relationships
+        self.utilities.create_atomese_expression(f"(Inheritance {device_concept} {home_concept})")
+        self.utilities.create_atomese_expression(f"(Inheritance {pattern_concept} {home_concept})")
+        self.utilities.create_atomese_expression(f"(Inheritance {energy_concept} {home_concept})")
+        self.utilities.create_atomese_expression(f"(Evaluation (Predicate \"controls\") (List {user_concept} {device_concept}))")
+        
+        # Create domain-specific device categories
+        for domain in ['light', 'climate', 'sensor', 'switch', 'lock', 'camera']:
+            domain_concept = self.atomspace.add_node("ConceptNode", f"{domain.title()}Device")
+            self.utilities.create_atomese_expression(f"(Inheritance {domain_concept} {device_concept})")
+    
+    def _store_device_interaction(self, entity_id: str, action: str, parameters: Dict = None):
+        """Store device interaction in AtomSpace for learning."""
+        if not self.enable_cognition:
+            return
+            
+        timestamp = datetime.now().isoformat()
+        device_node = self.atomspace.add_node("ConceptNode", entity_id)
+        action_node = self.atomspace.add_node("ConceptNode", f"Action_{action}")
+        time_node = self.atomspace.add_node("TimeNode", timestamp)
+        
+        # Store the interaction with temporal context
+        self.utilities.create_atomese_expression(
+            f"(AtTimeLink {time_node} (Evaluation (Predicate \"{action}\") (List {device_node} {action_node})))"
+        )
+        
+        # Store parameters as attributes
+        if parameters:
+            for key, value in parameters.items():
+                param_node = self.atomspace.add_node("ConceptNode", f"{key}_{value}")
+                self.utilities.create_atomese_expression(
+                    f"(Evaluation (Predicate \"has_parameter\") (List {action_node} {param_node}))"
+                )
+    
+    def _get_cognitive_insights(self, entity_id: str, context: str) -> List[str]:
+        """Generate cognitive insights about device or interaction."""
+        if not self.enable_cognition:
+            return []
+        
+        def insight_reasoner(atomspace, context_data, utilities):
+            insights = []
+            entity_domain = entity_id.split('.')[0] if '.' in entity_id else 'unknown'
+            
+            # Domain-specific insights
+            if entity_domain == 'light':
+                insights.append("💡 Light control detected - consider motion-based automation")
+                insights.append("🌙 Tip: Smart scheduling can reduce energy consumption")
+            elif entity_domain == 'climate':
+                insights.append("🌡️ Climate control - optimize based on occupancy patterns")
+                insights.append("📊 Energy savings opportunity through smart scheduling")
+            elif entity_domain == 'sensor':
+                insights.append("📈 Sensor data - valuable for automation triggers")
+                insights.append("🤖 Consider incorporating into smart scenes")
+            elif entity_domain == 'security' or 'lock' in entity_id or 'alarm' in entity_id:
+                insights.append("🔒 Security device - important for safety automation")
+                insights.append("📱 Consider mobile notifications for status changes")
+            
+            # Time-based insights
+            current_hour = datetime.now().hour
+            if 22 <= current_hour or current_hour <= 6:
+                insights.append("🌙 Night time operation - consider sleep-friendly settings")
+            elif 6 < current_hour <= 9:
+                insights.append("🌅 Morning routine - good time for automated scenes")
+            elif 17 <= current_hour < 22:
+                insights.append("🌆 Evening time - consider comfort optimizations")
+            
+            return insights
+        
+        try:
+            self.utilities.register_reasoner("cognitive_insights", insight_reasoner)
+            return self.utilities.apply_reasoner("cognitive_insights", {"entity_id": entity_id, "context": context})
+        except:
+            return ["🧠 Cognitive analysis temporarily unavailable"]
     
     async def _ensure_session(self):
         """Ensure aiohttp session exists"""
@@ -36,7 +141,7 @@ class HomeAssistantAPI:
     
     async def call_service(self, domain: str, service: str, entity_id: Optional[str] = None, **service_data) -> Dict:
         """
-        Call a Home Assistant service.
+        Call a Home Assistant service with cognitive enhancement.
         
         Args:
             domain: Service domain (e.g., 'light', 'climate')
@@ -45,7 +150,7 @@ class HomeAssistantAPI:
             **service_data: Additional service parameters
         
         Returns:
-            Dict containing the service call result
+            Dict containing the service call result with cognitive insights
         """
         await self._ensure_session()
         
@@ -55,22 +160,34 @@ class HomeAssistantAPI:
             data["entity_id"] = entity_id
         data.update(service_data)
         
+        # Store interaction in cognitive system
+        self._store_device_interaction(entity_id or f"{domain}.{service}", service, service_data)
+        
         async with self.session.post(url, headers=self.headers, json=data) as response:
             if response.status == 200:
-                return {"success": True, "data": await response.json()}
+                result_data = await response.json()
+                
+                # Generate cognitive insights
+                insights = self._get_cognitive_insights(entity_id or f"{domain}.{service}", f"Service call: {domain}.{service}")
+                
+                return {
+                    "success": True, 
+                    "data": result_data,
+                    "cognitive_insights": insights
+                }
             else:
                 error_text = await response.text()
                 return {"success": False, "error": f"HTTP {response.status}: {error_text}"}
     
     async def get_state(self, entity_id: str) -> Dict:
         """
-        Get the state of a specific entity.
+        Get the state of a specific entity with cognitive analysis.
         
         Args:
             entity_id: The entity ID to query
         
         Returns:
-            Dict containing entity state and attributes
+            Dict containing entity state, attributes, and cognitive insights
         """
         await self._ensure_session()
         
@@ -78,7 +195,26 @@ class HomeAssistantAPI:
         
         async with self.session.get(url, headers=self.headers) as response:
             if response.status == 200:
-                return {"success": True, "data": await response.json()}
+                entity_data = await response.json()
+                
+                # Store entity state in AtomSpace
+                if self.enable_cognition:
+                    entity_node = self.atomspace.add_node("ConceptNode", entity_id)
+                    state_node = self.atomspace.add_node("ConceptNode", f"State_{entity_data.get('state', 'unknown')}")
+                    timestamp_node = self.atomspace.add_node("TimeNode", entity_data.get('last_changed', datetime.now().isoformat()))
+                    
+                    self.utilities.create_atomese_expression(
+                        f"(AtTimeLink {timestamp_node} (Evaluation (Predicate \"has_state\") (List {entity_node} {state_node})))"
+                    )
+                
+                # Generate cognitive insights
+                insights = self._get_cognitive_insights(entity_id, f"Entity state: {entity_data.get('state')}")
+                
+                return {
+                    "success": True, 
+                    "data": entity_data,
+                    "cognitive_insights": insights
+                }
             else:
                 return {"success": False, "error": f"HTTP {response.status}"}
     
@@ -150,14 +286,149 @@ class HomeAssistantAPI:
                 return {"success": True, "data": await response.json()}
             else:
                 return {"success": False, "error": f"HTTP {response.status}"}
+    
+    async def analyze_cognitive_patterns(self, entity_id: str, hours: int = 24) -> Dict:
+        """
+        Perform advanced cognitive pattern analysis using OpenCog reasoning.
+        
+        Args:
+            entity_id: Entity to analyze patterns for
+            hours: Number of hours of history to analyze
+        
+        Returns:
+            Dict containing comprehensive cognitive analysis and predictions
+        """
+        if not self.enable_cognition:
+            return {"success": False, "error": "Cognitive features not enabled"}
+        
+        # Get historical data
+        history_result = await self.get_history(entity_id, hours)
+        if not history_result["success"]:
+            return history_result
+        
+        history_data = history_result["data"]
+        if not history_data or not history_data[0]:
+            return {"success": False, "error": "No historical data available"}
+        
+        entity_history = history_data[0]
+        
+        # Advanced cognitive pattern analysis
+        def cognitive_pattern_reasoner(atomspace, analysis_data, utilities):
+            analysis = {
+                "temporal_patterns": {},
+                "behavioral_insights": [],
+                "predictions": [],
+                "optimization_suggestions": [],
+                "energy_efficiency": {},
+                "automation_recommendations": []
+            }
+            
+            entity_domain = entity_id.split('.')[0]
+            states = [entry.get('state') for entry in entity_history]
+            unique_states = set(states)
+            
+            # Temporal analysis
+            hourly_activity = {}
+            daily_activity = {}
+            state_transitions = []
+            
+            for i, entry in enumerate(entity_history):
+                timestamp = datetime.fromisoformat(entry.get('last_changed', entry.get('last_updated', '')).replace('Z', '+00:00'))
+                state = entry.get('state', 'unknown')
+                
+                hour = timestamp.hour
+                day = timestamp.strftime("%A")
+                
+                if hour not in hourly_activity:
+                    hourly_activity[hour] = []
+                hourly_activity[hour].append(state)
+                
+                if day not in daily_activity:
+                    daily_activity[day] = []
+                daily_activity[day].append(state)
+                
+                if i > 0:
+                    prev_state = entity_history[i-1].get('state', 'unknown')
+                    if prev_state != state:
+                        state_transitions.append((prev_state, state, timestamp))
+            
+            # Peak activity analysis
+            hour_activity_count = {hour: len([s for s in states_in_hour if s == 'on']) 
+                                 for hour, states_in_hour in hourly_activity.items()}
+            
+            if hour_activity_count:
+                peak_hour = max(hour_activity_count.items(), key=lambda x: x[1])
+                analysis["temporal_patterns"]["peak_hour"] = peak_hour[0]
+                analysis["temporal_patterns"]["peak_activity"] = peak_hour[1]
+            
+            # Behavioral insights
+            current_hour = datetime.now().hour
+            if entity_domain == 'light':
+                on_states = len([s for s in states if s == 'on'])
+                usage_ratio = on_states / len(states) if states else 0
+                analysis["behavioral_insights"].append(f"Usage ratio: {usage_ratio:.2%}")
+                
+                if usage_ratio > 0.7:
+                    analysis["optimization_suggestions"].append("High usage - consider smart dimming")
+                elif usage_ratio < 0.1:
+                    analysis["optimization_suggestions"].append("Low usage - consider motion automation")
+                
+                # Energy efficiency analysis
+                analysis["energy_efficiency"]["usage_score"] = min(10, 10 - (usage_ratio * 5))
+                
+            elif entity_domain == 'climate':
+                analysis["behavioral_insights"].append("Climate system monitoring comfort patterns")
+                analysis["optimization_suggestions"].append("Schedule based on occupancy for energy savings")
+                
+            elif entity_domain == 'sensor':
+                if 'motion' in entity_id.lower():
+                    motion_events = len([s for s in states if s == 'on'])
+                    analysis["behavioral_insights"].append(f"Motion events: {motion_events}")
+                    if motion_events > 20:
+                        analysis["automation_recommendations"].append("High traffic - optimize automation triggers")
+            
+            # Predictive analysis
+            if states and current_hour in hour_activity_count:
+                current_activity = hour_activity_count[current_hour]
+                if current_activity > 0:
+                    analysis["predictions"].append("Activity expected in current time window")
+                else:
+                    analysis["predictions"].append("Low activity period - energy saving opportunity")
+            
+            # Automation recommendations
+            if len(state_transitions) > 5:
+                analysis["automation_recommendations"].append("Frequent state changes - consider smart automation")
+            
+            # Context-aware suggestions
+            if 22 <= current_hour or current_hour <= 6:
+                analysis["optimization_suggestions"].append("Night mode - minimize disruptions")
+            elif 6 < current_hour <= 9:
+                analysis["automation_recommendations"].append("Morning routine automation opportunity")
+            
+            return analysis
+        
+        try:
+            self.utilities.register_reasoner("cognitive_pattern_analysis", cognitive_pattern_reasoner)
+            cognitive_analysis = self.utilities.apply_reasoner("cognitive_pattern_analysis", {"history": entity_history})
+            
+            return {
+                "success": True,
+                "entity_id": entity_id,
+                "analysis_period": f"{hours} hours",
+                "total_state_changes": len(entity_history),
+                "cognitive_analysis": cognitive_analysis,
+                "knowledge_atoms": len(self.atomspace.atoms) if self.atomspace else 0
+            }
+        except Exception as e:
+            return {"success": False, "error": f"Cognitive analysis failed: {str(e)}"}
 
-class HomeAssistantTools:
+class CognitiveHomeAssistantTools:
     """
-    High-level tools for common Home Assistant operations.
-    These can be used as decorators in Pydantic AI agents.
+    Enhanced tools for Home Assistant operations with OpenCog cognitive capabilities.
+    These tools provide intelligent automation suggestions and pattern recognition.
     """
     
-    def __init__(self, ha_api: HomeAssistantAPI):
+    def __init__(self, ha_api: CognitiveHomeAssistantAPI):
         self.ha_api = ha_api
     
     async def control_lights(self, action: str, entity_ids: List[str] = None, **kwargs) -> str:
