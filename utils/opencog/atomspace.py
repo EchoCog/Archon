@@ -16,6 +16,30 @@ class AtomSpace:
         self.atoms = {}
         self.relationships = {}
         self.types = set()
+        
+        # Initialize with cognitive primitive types
+        self._initialize_cognitive_types()
+    
+    def _initialize_cognitive_types(self):
+        """Initialize AtomSpace with cognitive primitive types."""
+        # Standard OpenCog types
+        standard_types = [
+            "ConceptNode", "PredicateNode", "VariableNode", "SchemaNode",
+            "EvaluationLink", "InheritanceLink", "MemberLink", "ListLink",
+            "SimilarityLink", "DefineLink"
+        ]
+        
+        # Cognitive primitive types for tensor fragments
+        cognitive_types = [
+            "TensorSignatureNode", "ModalityNode", "DepthNode", 
+            "ContextNode", "SalienceNode", "AutonomyNode",
+            "TensorFragmentLink", "HasSignatureLink", "PatternNode", 
+            "PatternLink", "BindingNode", "CognitiveBindingLink"
+        ]
+        
+        # Add all types to the type set
+        for type_name in standard_types + cognitive_types:
+            self.types.add(type_name)
     
     def add_node(self, type_name, name, value=None):
         """
