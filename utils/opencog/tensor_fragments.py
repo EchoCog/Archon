@@ -5,10 +5,10 @@ This module implements the tensor signature system [modality, depth, context, sa
 for encoding agentic kernel ML primitives and their bidirectional translation with AtomSpace hypergraph patterns.
 """
 
-import numpy as np
 from typing import Dict, List, Any, Optional, Tuple, Union
 from dataclasses import dataclass
 from enum import Enum
+import math
 
 
 class ModalityType(Enum):
@@ -41,25 +41,25 @@ class TensorSignature:
     salience: float
     autonomy_index: float
     
-    def to_tensor(self) -> np.ndarray:
-        """Convert to numpy tensor."""
-        return np.array([self.modality, self.depth, self.context, self.salience, self.autonomy_index])
+    def to_tensor(self) -> List[float]:
+        """Convert to tensor representation."""
+        return [self.modality, self.depth, self.context, self.salience, self.autonomy_index]
     
     @classmethod
-    def from_tensor(cls, tensor: np.ndarray) -> 'TensorSignature':
-        """Create from numpy tensor."""
+    def from_tensor(cls, tensor: List[float]) -> 'TensorSignature':
+        """Create from tensor representation."""
         if len(tensor) != 5:
             raise ValueError("Tensor signature must have exactly 5 dimensions")
-        return cls(*tensor.tolist())
+        return cls(*tensor)
     
     def normalize(self) -> 'TensorSignature':
         """Ensure all values are in [0.0, 1.0] range."""
         return TensorSignature(
-            modality=np.clip(self.modality, 0.0, 1.0),
-            depth=np.clip(self.depth, 0.0, 1.0),
-            context=np.clip(self.context, 0.0, 1.0),
-            salience=np.clip(self.salience, 0.0, 1.0),
-            autonomy_index=np.clip(self.autonomy_index, 0.0, 1.0)
+            modality=max(0.0, min(1.0, self.modality)),
+            depth=max(0.0, min(1.0, self.depth)),
+            context=max(0.0, min(1.0, self.context)),
+            salience=max(0.0, min(1.0, self.salience)),
+            autonomy_index=max(0.0, min(1.0, self.autonomy_index))
         )
 
 
