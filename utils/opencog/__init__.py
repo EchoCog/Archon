@@ -66,9 +66,34 @@ from utils.opencog.dynamic_mesh import (
     MeshNode
 )
 
-# Attach Phase 2 ECAN components to opencog namespace
+# Attach Phase 2 ECAN components to opencg namespace
 opencog.ecan_attention = ECANAttentionManager
 opencog.dynamic_mesh = DynamicAttentionMesh
+
+# Phase 3: Neural-Symbolic Synthesis via Custom GGML Kernels
+from utils.opencog.ggml_kernels import (
+    GGMLKernelManager,
+    GGMLKernel,
+    KernelOperation,
+    KernelType,
+    NeuralSymbolicSignature,
+    SymbolicReasoningKernel,
+    NeuralEmbeddingKernel,
+    AttentionFusionKernel,
+    create_neural_symbolic_operation,
+    enhance_tensor_fragment_with_ggml
+)
+from utils.opencog.tensor_benchmarking import (
+    TensorBenchmarkManager,
+    BenchmarkConfig,
+    BenchmarkType,
+    BenchmarkResult,
+    NeuralSymbolicBenchmarkSuite
+)
+
+# Attach Phase 3 GGML components to opencog namespace
+opencog.ggml_kernels = GGMLKernelManager
+opencog.tensor_benchmarking = TensorBenchmarkManager
 
 # Export key classes for direct import
 __all__ = [
@@ -81,5 +106,10 @@ __all__ = [
     # Phase 2 ECAN components
     'ECANAttentionManager', 'AttentionValue', 'ResourceAllocation', 'ECANResourceKernel',
     'DynamicAttentionMesh', 'MeshTopology', 'AttentionFlow', 'MeshNode',
-    'create_ecan_enhanced_tensor_fragment', 'sync_tensor_fragments_with_ecan'
+    'create_ecan_enhanced_tensor_fragment', 'sync_tensor_fragments_with_ecan',
+    # Phase 3 GGML components
+    'GGMLKernelManager', 'GGMLKernel', 'KernelOperation', 'KernelType', 'NeuralSymbolicSignature',
+    'SymbolicReasoningKernel', 'NeuralEmbeddingKernel', 'AttentionFusionKernel',
+    'create_neural_symbolic_operation', 'enhance_tensor_fragment_with_ggml',
+    'TensorBenchmarkManager', 'BenchmarkConfig', 'BenchmarkType', 'BenchmarkResult'
 ]
