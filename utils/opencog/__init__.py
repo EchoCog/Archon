@@ -49,6 +49,27 @@ opencog.tensor_fragments = TensorFragmentArchitecture
 opencog.cognitive_grammar = CognitiveGrammarMicroservice
 opencog.verification = CognitivePrimitiveVerifier
 
+# Phase 2: ECAN Attention Allocation & Resource Kernel
+from utils.opencog.ecan_attention import (
+    ECANAttentionManager,
+    AttentionValue,
+    ResourceAllocation,
+    ECANResourceKernel,
+    AttentionType,
+    create_ecan_enhanced_tensor_fragment,
+    sync_tensor_fragments_with_ecan
+)
+from utils.opencog.dynamic_mesh import (
+    DynamicAttentionMesh,
+    MeshTopology,
+    AttentionFlow,
+    MeshNode
+)
+
+# Attach Phase 2 ECAN components to opencog namespace
+opencog.ecan_attention = ECANAttentionManager
+opencog.dynamic_mesh = DynamicAttentionMesh
+
 # Export key classes for direct import
 __all__ = [
     'AtomSpace', 'CogServer', 'Utilities',
@@ -56,5 +77,9 @@ __all__ = [
     'CognitiveGrammarMicroservice', 'CognitiveGrammarServer', 'CognitiveGrammarOrchestrator',
     'CognitivePrimitiveVerifier', 'HypergraphVisualizer', 'CognitiveDashboard',
     'SchemeParser', 'run_verification_suite',
-    'create_default_ml_primitive_encoders', 'create_default_hypergraph_decoders'
+    'create_default_ml_primitive_encoders', 'create_default_hypergraph_decoders',
+    # Phase 2 ECAN components
+    'ECANAttentionManager', 'AttentionValue', 'ResourceAllocation', 'ECANResourceKernel',
+    'DynamicAttentionMesh', 'MeshTopology', 'AttentionFlow', 'MeshNode',
+    'create_ecan_enhanced_tensor_fragment', 'sync_tensor_fragments_with_ecan'
 ]
